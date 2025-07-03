@@ -39,15 +39,15 @@ struct MainTabView: View {
                     .background(Color.tabBarBackground)
                     .ignoresSafeArea()
                 
-                FavoritesView()
-                    .tag(TabType.favorites)
-                    .background(Color.tabBarBackground)
-                    .ignoresSafeArea()
+//                FavoritesView()
+//                    .tag(TabType.favorites)
+//                    .background(Color.tabBarBackground)
+//                    .ignoresSafeArea()
                 
-                SettingsView()
-                    .tag(TabType.settings)
-                    .background(Color.tabBarBackground)
-                    .ignoresSafeArea()
+//                SettingsView()
+//                    .tag(TabType.settings)
+//                    .background(Color.tabBarBackground)
+//                    .ignoresSafeArea()
             }
             .background(.clear)
             
