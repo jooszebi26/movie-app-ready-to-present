@@ -1,10 +1,3 @@
-//
-//  Config.swift
-//  movie-app-live-ready-to-present
-//
-//  Created by Szebasztian Joo on 2025. 07. 03..
-//
-
 import Foundation
 
 enum Config {
