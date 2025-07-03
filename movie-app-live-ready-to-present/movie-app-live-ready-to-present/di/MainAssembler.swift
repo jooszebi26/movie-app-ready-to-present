@@ -1,23 +1,33 @@
-import UIKit
-import InjectPropertyWrapper
 import Swinject
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-    let assembler: MainAssembler
+class MainAssembler {
+    public static var instance: MainAssembler! = nil
     
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
-    ) -> Bool {
-        print("AppDelegate - App launched")
-        return true
+    var resolver: Resolver {
+        return assembler.resolver
+    }
+    let container: Container
+    private let assembler: Assembler
+    
+    private init(withAssemblies assemblies: [Assembly]) {
+        container = Container()
+        assembler = Assembler(container: container)
+        assembler.apply(assemblies: assemblies)
     }
     
-    override init() {
-        assembler = MainAssembler.create(withAssemblies: [
-            ServiceAssembly(),
-            ViewModelAssembly()
-        ])
-        InjectSettings.resolver = assembler.container
+    /// Creates the single MainAssembler instance with the given assembly.
+    /// IMPORTANT: this factory method SHOULD only be called once. Thereafter, use
+    /// MainAssembler.instance to access the sibgleton instance that this method created.
+    /// There SHOULD NOT be multiple ManAssembler and MainAssembly instances in the system!
+    static func create(withAssemblies assemblies: [Assembly]) -> MainAssembler {
+        instance = MainAssembler(withAssemblies: assemblies)
+        return instance
+    }
+    deinit {
+        // log.debug("deinit")
+    }
+
+    func dispose() {
+        // log.debug("dispose")
     }
 }
