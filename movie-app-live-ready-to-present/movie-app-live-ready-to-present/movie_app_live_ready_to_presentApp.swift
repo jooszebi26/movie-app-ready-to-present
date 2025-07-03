@@ -11,9 +11,11 @@ import SwiftUI
 struct movie_app_live_ready_to_presentApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    @State var selectedTab: TabType = TabType.genre
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView(selectedTab: $selectedTab)
         }
     }
 }
