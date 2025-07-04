@@ -1,3 +1,10 @@
+//
+//  MediaItem.swift
+//  movie-app-live
+//
+//  Created by Zsolt Pete on 2025. 04. 15..
+//
+
 import Foundation
 
 struct MediaItemPage {
@@ -26,6 +33,7 @@ struct MediaItem: Identifiable {
     let imageUrl: URL?
     let rating: Double
     let voteCount: Int
+//    let type: MediaItemType
     
     init(id: Int) {
         self.id = id
@@ -35,6 +43,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = nil
         self.rating = -1
         self.voteCount = -1
+//        self.type = .unknown
     }
     
     init(id: Int, title: String, year: String, duration: String, imageUrl: URL?, rating: Double, voteCount: Int) {
@@ -45,6 +54,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = rating
         self.voteCount = voteCount
+//        self.type = .movie
     }
     
     init(dto: MovieResponse) {
@@ -66,7 +76,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage ?? 0.0
         self.voteCount = dto.voteCount ?? 0
-        
+//        self.type = .movie
     }
     
     init(dto: TVResponse) {
@@ -88,7 +98,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage ?? 0.0
         self.voteCount = dto.voteCount ?? 0
-        
+//        self.type = .TV
     }
     
     init(detail: MediaItemDetail) {
@@ -99,7 +109,8 @@ struct MediaItem: Identifiable {
         self.imageUrl = detail.imageUrl
         self.rating = detail.rating
         self.voteCount = detail.voteCount
-        
+        //self.
     }
     
 }
+
