@@ -1,6 +1,8 @@
 import Foundation
 import Moya
 import InjectPropertyWrapper
+import Combine
+import Alamofire
 
 protocol MoviesServiceProtocol {
     func fetchGenres(req: FetchGenreRequest) async throws -> [Genre]
@@ -15,75 +17,81 @@ class MoviesService: MoviesServiceProtocol {
     var moya: MoyaProvider<MultiTarget>!
     
     
-    func fetchGenres(req: FetchGenreRequest) async throws -> [Genre] {
-        return try await withCheckedThrowingContinuation { continuation in
-            moya.request(MultiTarget(MoviesApi.fetchGenres(req: req))) { result in
-            }
-        }
+    func fetchGenres(req: FetchGenreRequest) -> AnyPublisher<[Genre], MovieError> {
+        requestAndTransform(
+            target: MultiTarget(MoviesApi.fetchGenres(req: req)),
+            decodeTo: GenreListResponse.self,
+            transform: { $0.genres.map(Genre.init(dto:)) }
+        )
     }
     
-    func fetchTVGenres(req: FetchGenreRequest) async throws -> [Genre] {
-         return try await withCheckedThrowingContinuation { continuation in
-             moya.request(MultiTarget(MoviesApi.fetchTVGenres(req: req))) { result in
-                 switch result {
-                 case .success(let response):
-                     do {
-                         let decodedResponse = try JSONDecoder().decode(GenreListResponse.self, from: response.data)
-                         
-                         let genres = decodedResponse.genres.map { genreResponse in
-                             Genre(dto: genreResponse)
-                         }
-                         
-                         continuation.resume(returning: genres)
-                     } catch {
-                         continuation.resume(throwing: error)
-                     }
-                 case .failure(let error):
-                     continuation.resume(throwing: error)
-                 }
-             }
-         }
-     }
-    
-    func fetchMovies(req: FetchMoviesRequest) async throws -> [Movie] {
-        return try await withCheckedThrowingContinuation { continuation in
-            moya.request(MultiTarget(MoviesApi.fetchMovies(req: req))) { result in
-                switch result {
-                case .success(let response):
-                    do {
-                        let decodedResponse = try JSONDecoder().decode(MoviePageResponse.self, from: response.data)
-                        let movies = decodedResponse.results.map { Movie(dto: $0) }
-                        continuation.resume(returning: movies)
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
+    func fetchTVGenres(req: FetchGenreRequest) -> AnyPublisher<[Genre], MovieError> {
+        requestAndTransform(
+            target: MultiTarget(MoviesApi.fetchTVGenres(req: req)),
+            decodeTo: GenreListResponse.self,
+            transform: { $0.genres.map(Genre.init(dto:)) }
+        )
     }
     
-    func searchMovies(req: SearchMovieRequest) async throws -> [Movie] {
-        return try await withCheckedThrowingContinuation { continuation in
-            moya.request(MultiTarget(MoviesApi.searchMovies(req: req))) { result in
+    func searchMovies(req: SearchMovieRequest) -> AnyPublisher<[MediaItem], MovieError> {
+        requestAndTransform(
+            target: MultiTarget(MoviesApi.searchMovies(req: req)),
+            decodeTo: MoviePageResponse.self,
+            transform: { $0.results.map(MediaItem.init(dto:)) }
+        )
+    }
+    
+    func fetchMovies(req: FetchMediaListRequest) -> AnyPublisher<MediaItemPage, MovieError> {
+        requestAndTransform(
+            target: MultiTarget(MoviesApi.fetchMovies(req: req)),
+            decodeTo: MoviePageResponse.self,
+            transform: { MediaItemPage(dto: $0) }
+        )
+    }
+    
+    private func requestAndTransform<ResponseType: Decodable, Output>(
+        target: MultiTarget,
+        decodeTo: ResponseType.Type,
+        transform: @escaping (ResponseType) -> Output
+    ) -> AnyPublisher<Output, MovieError> {
+        let future = Future<Output, MovieError> { future in
+            self.moya.request(target) { result in
                 switch result {
                 case .success(let response):
-                    do {
-                        let decodedResponse = try JSONDecoder().decode(MoviePageResponse.self, from: response.data)
-                        
-                        let movies = decodedResponse.results.map { movieResponse in
-                            Movie(dto: movieResponse)
+                    switch response.statusCode {
+                    case 200..<300:
+                        do {
+                            let decoded = try JSONDecoder().decode(decodeTo, from: response.data)
+                            let output = transform(decoded)
+                            future(.success(output))
+                        } catch {
+                            future(.failure(MovieError.mappingError(message: error.localizedDescription)))
                         }
-                        
-                        continuation.resume(returning: movies)
-                    } catch {
-                        continuation.resume(throwing: error)
+                    case 400..<500:
+                        future(.failure(MovieError.clientError))
+                    default:
+                        if let apiError = try? JSONDecoder().decode(MovieAPIErrorResponse.self, from: response.data) {
+                            if apiError.statusCode == 7 {
+                                future(.failure(MovieError.invalidApiKeyError(message: apiError.statusMessage)))
+                            } else {
+                                future(.failure(MovieError.unexpectedError))
+                            }
+                        } else {
+                            future(.failure(MovieError.unexpectedError))
+                        }
                     }
                 case .failure(let error):
-                    continuation.resume(throwing: error)
+                    if error.isNoInternetError {
+                        future(.failure(MovieError.noInternetError))
+                    } else {
+                        future(.failure(MovieError.unexpectedError))
+                    }
+                    
                 }
             }
         }
+        return future
+            .eraseToAnyPublisher()
+            
     }
 }
