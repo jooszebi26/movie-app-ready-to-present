@@ -1,0 +1,37 @@
+/* 
+  Localizable.strings
+  movie-app-live
+
+  Created by Zsolt Pete on 2025. 04. 08..
+  
+*/
+
+"genreSection.title" = "Filmes app";
+"search.empty.title" = "Kezdj el gépelni\na kereséshez";
+"search.textfield.placeholder" = "Filmek, Rendező, Színész, Színésznő, stb.";
+"button.close.text" = "Bezárás";
+"unexpected.error.title" = "Váratlan hiba";
+"unexpected.error.message" = "Valami hiba történt. Kérlek próbáld újra később.";
+"favoriteMovies.title" = "Kedvencek";
+"detail.rate.button" = "Értékeld a filmet";
+"detail.imdb.button" = "Megtekintés az IMDB-n";
+"detail.releaseDate" = "Megjelenés dátuma";
+"detail.runtime" = "Hossz";
+"detail.language" = "Nyelv";
+"detail.overview" = "Tartalom";
+"detail.publishers" = "Kiadók és cégek";
+"detail.cast" = "Szereplők";
+"available" = "Elérhető";
+"unavailable" = "Nem elérhető";
+"noInternet" = "Nincs internetkapcsolat";
+"addReview.subTitle" = "Írj őszinte véleményt";
+"addReview.buttonTitle" = "Vélemény elküldése";
+
+"settings.title" = "Beállítások";
+"settings.chooseLanguage" = "Nyelv kiválasztása";
+"settings.chooseTheme" = "Téma kiválasztása";
+"settings.lang.english" = "Angol";
+"settings.lang.russian" = "Orosz";
+"settings.lang.hungarian" = "Magyar";
+"settings.theme.light" = "Világos mód";
+"settings.theme.dark" = "Sötét mód";
