@@ -39,17 +39,18 @@ struct MainTabView: View {
                     .background(Color.tabBarBackground)
                     .ignoresSafeArea()
                 
-//                FavoritesView()
-//                    .tag(TabType.favorites)
-//                    .background(Color.tabBarBackground)
-//                    .ignoresSafeArea()
+                FavoritesView()
+                    .tag(TabType.favorites)
+                    .background(Color.tabBarBackground)
+                    .ignoresSafeArea()
                 
-//                SettingsView()
-//                    .tag(TabType.settings)
-//                    .background(Color.tabBarBackground)
-//                    .ignoresSafeArea()
+                SettingsView()
+                    .tag(TabType.settings)
+                    .background(Color.tabBarBackground)
+                    .ignoresSafeArea()
             }
             .background(.clear)
+            .padding(.bottom, LayoutConst.largePadding)
             
             HStack() {
                 Spacer()
@@ -59,15 +60,13 @@ struct MainTabView: View {
                 }
             }
             .padding(.top, 24)
-            .padding(.bottom, 48.0 - safeArea().bottom)
+            .padding(.bottom, 48)
             .background(
                 Color.tabBarBackground
                     .clipShape(RoundedCorner(radius: 30, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
             )
-            
-            
-            
         }
+        .ignoresSafeArea()
     }
 }

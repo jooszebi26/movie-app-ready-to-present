@@ -1,3 +1,10 @@
+//
+//  TabbarItemView.swift
+//  movie-app-live
+//
+//  Created by Zsolt Pete on 2025. 04. 21..
+//
+
 import SwiftUI
 
 struct TabBarItemView: View {
