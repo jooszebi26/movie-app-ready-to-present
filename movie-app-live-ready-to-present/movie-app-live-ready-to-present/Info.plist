@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>test</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>movieapp</string>
+			</array>
+		</dict>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Raleway-Medium</string>
+		<string>Lato-Bold.ttf</string>
+		<string>Lato-Regular.ttf</string>
+		<string>Raleway-ExtraBold.otf</string>
+		<string>Raleway-Medium.ttf</string>
+	</array>
+</dict>
+</plist>
